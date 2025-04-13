@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Play, Pause, RotateCcw, Music, Bell, BookOpen, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -53,10 +52,8 @@ const FocusTools = () => {
   }, [ambientSound]);
   
   useEffect(() => {
-    // Reset timer when mode changes
     resetTimer();
     
-    // Set initial time based on mode
     switch (activeMode) {
       case "pomodoro":
         setTimeRemaining(settings.pomodoro.workTime * 60);
@@ -164,7 +161,7 @@ const FocusTools = () => {
     <div className="space-y-6 animate-fade-in">
       <h2 className="text-3xl font-bold">Focus Tools</h2>
       
-      <Tabs defaultValue="pomodoro" onValueChange={(value) => setActiveMode(value as FocusMode)}>
+      <Tabs defaultValue="pomodoro" value={activeMode} onValueChange={(value) => setActiveMode(value as FocusMode)}>
         <TabsList className="w-full">
           <TabsTrigger value="pomodoro" className="flex-1">
             <div className="flex items-center">

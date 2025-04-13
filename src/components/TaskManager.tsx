@@ -204,18 +204,20 @@ const TaskManager = () => {
       <Card className="overflow-hidden">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
-            <TabsList>
-              {FILTERS.map((filter) => (
-                <TabsTrigger
-                  key={filter}
-                  value={filter}
-                  onClick={() => setSelectedFilter(filter)}
-                  className={selectedFilter === filter ? 'bg-primary text-primary-foreground' : ''}
-                >
-                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
+            {/* This was missing the Tabs component wrapping the TabsList */}
+            <Tabs value={selectedFilter} onValueChange={(value) => setSelectedFilter(value as FilterType)}>
+              <TabsList>
+                {FILTERS.map((filter) => (
+                  <TabsTrigger
+                    key={filter}
+                    value={filter}
+                    className={selectedFilter === filter ? 'bg-primary text-primary-foreground' : ''}
+                  >
+                    {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -247,6 +249,7 @@ const TaskManager = () => {
           </div>
         </CardHeader>
         <CardContent className="p-0">
+          {/* Content for the selected filter tab should be inside TabsContent */}
           {filteredTasks.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-muted-foreground">No tasks found</p>
