@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { PlusCircle, Clock, Calendar, CheckCheck, Filter, AlertTriangle, Clock3 } from "lucide-react";
@@ -72,7 +71,6 @@ const TaskManager = () => {
     setTasks(items);
   };
 
-  // Filter tasks based on selected filter
   const getFilteredTasks = () => {
     let filtered = [...tasks];
     const today = new Date();
@@ -96,7 +94,6 @@ const TaskManager = () => {
       filtered = filtered.filter(task => task.status === "completed");
     }
 
-    // Sort tasks
     return filtered.sort((a, b) => {
       if (sortBy === "priority") {
         const priorityOrder = { high: 0, medium: 1, low: 2 };
@@ -116,7 +113,6 @@ const TaskManager = () => {
 
   const filteredTasks = getFilteredTasks();
   
-  // Get task suggestions based on time of day
   const getTaskSuggestion = () => {
     const hour = new Date().getHours();
     
@@ -133,7 +129,6 @@ const TaskManager = () => {
     }
   };
 
-  // Task stats 
   const completedToday = tasks.filter(task => {
     if (task.status !== "completed") return false;
     const taskDate = new Date(task.createdAt);
@@ -162,7 +157,7 @@ const TaskManager = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="col-span-1">
+        <Card className="col-span-1 border-green-200 bg-green-50/50 dark:bg-green-900/20">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <CheckCheck className="mr-2 h-5 w-5 text-green-500" />
@@ -174,7 +169,7 @@ const TaskManager = () => {
           </CardContent>
         </Card>
         
-        <Card className="col-span-1">
+        <Card className="col-span-1 border-amber-200 bg-amber-50/50 dark:bg-amber-900/20">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <AlertTriangle className="mr-2 h-5 w-5 text-amber-500" />
@@ -186,7 +181,7 @@ const TaskManager = () => {
           </CardContent>
         </Card>
         
-        <Card className="col-span-1">
+        <Card className="col-span-1 border-blue-200 bg-blue-50/50 dark:bg-blue-900/20">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center">
               <Clock3 className="mr-2 h-5 w-5 text-blue-500" />
@@ -204,7 +199,6 @@ const TaskManager = () => {
       <Card className="overflow-hidden">
         <CardHeader className="pb-2 flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
-            {/* This was missing the Tabs component wrapping the TabsList */}
             <Tabs value={selectedFilter} onValueChange={(value) => setSelectedFilter(value as FilterType)}>
               <TabsList>
                 {FILTERS.map((filter) => (
@@ -249,7 +243,6 @@ const TaskManager = () => {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {/* Content for the selected filter tab should be inside TabsContent */}
           {filteredTasks.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-muted-foreground">No tasks found</p>
