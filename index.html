@@ -1,26 +1,362 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>soothe-productive</title>
-    <meta name="description" content="Lovable Generated Project" />
-    <meta name="author" content="Lovable" />
-
-    <meta property="og:title" content="Lovable Generated Project" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <title>TaskFlow</title>
+    <meta name="description" content="A simple task management and focus app" />
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </head>
 
   <body>
-    <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
+    <div class="app">
+      <!-- Header -->
+      <header>
+        <div class="container header-content">
+          <h1 class="logo">TaskFlow</h1>
+          <div class="header-right">
+            <button id="theme-toggle" aria-label="Toggle dark mode">
+              <i class="fas fa-moon"></i>
+            </button>
+            <div id="clock">
+              <div class="time">00:00:00 AM</div>
+              <div class="date">Monday, Jan 1, 2023</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="container">
+        <div class="grid">
+          <!-- Task Manager Section -->
+          <div class="task-section">
+            <div class="task-header">
+              <div>
+                <h2>My Tasks</h2>
+                <p class="suggestion">Morning is perfect for planning your day and tackling challenging tasks.</p>
+              </div>
+              <button id="add-task-btn" class="btn primary-btn">
+                <i class="fas fa-plus-circle"></i>
+                Add Task
+              </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+              <div class="stat-card completed">
+                <div class="stat-header">
+                  <i class="fas fa-check-double"></i>
+                  <span>Completed Today</span>
+                </div>
+                <div class="stat-value" id="completed-count">0</div>
+              </div>
+
+              <div class="stat-card priority">
+                <div class="stat-header">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <span>High Priority</span>
+                </div>
+                <div class="stat-value" id="priority-count">0</div>
+              </div>
+
+              <div class="stat-card time">
+                <div class="stat-header">
+                  <i class="fas fa-clock"></i>
+                  <span>Time Allocated</span>
+                </div>
+                <div class="stat-value" id="time-count">0 hrs</div>
+              </div>
+            </div>
+
+            <!-- Task Filters -->
+            <div class="task-card">
+              <div class="task-filters">
+                <div class="tabs">
+                  <button class="tab active" data-filter="all">All</button>
+                  <button class="tab" data-filter="today">Today</button>
+                  <button class="tab" data-filter="upcoming">Upcoming</button>
+                  <button class="tab" data-filter="completed">Completed</button>
+                </div>
+                <div class="sort-buttons">
+                  <button class="sort-btn active" data-sort="priority">Priority</button>
+                  <button class="sort-btn" data-sort="deadline">
+                    <i class="fas fa-calendar"></i> Date
+                  </button>
+                  <button class="sort-btn" data-sort="timeAllocation">
+                    <i class="fas fa-clock"></i> Time
+                  </button>
+                </div>
+              </div>
+
+              <!-- Task List Container -->
+              <div id="tasks-container" class="tasks">
+                <!-- Tasks will be added here by JavaScript -->
+                <div class="empty-state">
+                  <p>No tasks found</p>
+                  <button class="btn link-btn" id="add-first-task">Add your first task</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Focus Tools Section -->
+          <div class="focus-section">
+            <h2>Focus Tools</h2>
+            
+            <div class="focus-tabs">
+              <button class="focus-tab active" data-mode="pomodoro">
+                <i class="fas fa-bell"></i> Pomodoro
+              </button>
+              <button class="focus-tab" data-mode="study">
+                <i class="fas fa-book"></i> Study Mode
+              </button>
+              <button class="focus-tab" data-mode="distraction-free">
+                <i class="fas fa-volume-mute"></i> Focus Mode
+              </button>
+            </div>
+            
+            <div class="focus-content">
+              <!-- Pomodoro Timer -->
+              <div class="focus-panel active" id="pomodoro-panel">
+                <div class="timer-card">
+                  <h3 class="timer-title">Focus Time</h3>
+                  <div class="timer-display">25:00</div>
+                  <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                  </div>
+                  <div class="timer-controls">
+                    <button class="btn" id="pomodoro-start">
+                      <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn outline" id="pomodoro-reset">
+                      <i class="fas fa-undo"></i> Reset
+                    </button>
+                  </div>
+                  <div class="timer-settings">
+                    <p>Pomodoro Settings</p>
+                    <div class="settings-grid">
+                      <div class="setting">
+                        <label for="work-time">Work: <span id="work-time-value">25</span>m</label>
+                        <input type="range" id="work-time" min="5" max="60" step="5" value="25">
+                      </div>
+                      <div class="setting">
+                        <label for="break-time">Break: <span id="break-time-value">5</span>m</label>
+                        <input type="range" id="break-time" min="1" max="30" step="1" value="5">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Study Mode -->
+              <div class="focus-panel" id="study-panel">
+                <div class="timer-card">
+                  <h3 class="timer-title">Study Session</h3>
+                  <div class="timer-display">45:00</div>
+                  <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                  </div>
+                  <div class="timer-controls">
+                    <button class="btn" id="study-start">
+                      <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn outline" id="study-reset">
+                      <i class="fas fa-undo"></i> Reset
+                    </button>
+                  </div>
+                  <div class="timer-settings">
+                    <div class="setting">
+                      <label for="session-time">Session Length: <span id="session-time-value">45</span>m</label>
+                      <input type="range" id="session-time" min="10" max="120" step="5" value="45">
+                    </div>
+                    <div class="toggle-setting">
+                      <input type="checkbox" id="ambient-sound">
+                      <label for="ambient-sound">
+                        <i class="fas fa-music"></i> Ambient Background Sound
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Focus Mode -->
+              <div class="focus-panel" id="focus-panel">
+                <div class="timer-card">
+                  <h3 class="timer-title">Distraction-Free Focus</h3>
+                  <div class="timer-display">60:00</div>
+                  <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                  </div>
+                  <div class="timer-controls">
+                    <button class="btn" id="focus-start">
+                      <i class="fas fa-play"></i> Start
+                    </button>
+                    <button class="btn outline" id="focus-reset">
+                      <i class="fas fa-undo"></i> Reset
+                    </button>
+                  </div>
+                  <div class="timer-settings">
+                    <div class="toggle-setting">
+                      <input type="checkbox" id="mute-notifications">
+                      <label for="mute-notifications">
+                        <i class="fas fa-volume-mute"></i> Mute Notifications During Focus
+                      </label>
+                    </div>
+                    <div class="toggle-setting">
+                      <input type="checkbox" id="ambient-sound-focus">
+                      <label for="ambient-sound-focus">
+                        <i class="fas fa-music"></i> Ambient Background Sound
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Time Tracking Card -->
+              <div class="tracking-card">
+                <h3>Time Tracking</h3>
+                <div class="tracking-stat">
+                  <span>Focus Sessions Today:</span>
+                  <span class="value">3</span>
+                </div>
+                <div class="tracking-stat">
+                  <span>Total Focus Time Today:</span>
+                  <span class="value">2h 15m</span>
+                </div>
+                <div class="tracking-stat">
+                  <span>Productivity Score:</span>
+                  <span class="value">85%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+    
+    <!-- Add Task Modal -->
+    <div class="modal" id="add-task-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Task</h3>
+          <button class="close-btn">&times;</button>
+        </div>
+        <form id="add-task-form">
+          <div class="form-group">
+            <label for="task-title">Title</label>
+            <input type="text" id="task-title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="task-description">Description</label>
+            <textarea id="task-description" rows="3"></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="task-deadline">Deadline (Optional)</label>
+              <input type="date" id="task-deadline">
+            </div>
+            
+            <div class="form-group">
+              <label for="task-time">Time Allocation (mins)</label>
+              <div class="input-icon">
+                <i class="fas fa-clock"></i>
+                <input type="number" id="task-time" placeholder="30">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="task-priority">Priority</label>
+            <select id="task-priority">
+              <option value="high">High</option>
+              <option value="medium" selected>Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="submit" class="btn primary-btn">Add Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Edit Task Modal -->
+    <div class="modal" id="edit-task-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Edit Task</h3>
+          <button class="close-btn">&times;</button>
+        </div>
+        <form id="edit-task-form">
+          <input type="hidden" id="edit-task-id">
+          <div class="form-group">
+            <label for="edit-task-title">Title</label>
+            <input type="text" id="edit-task-title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-task-description">Description</label>
+            <textarea id="edit-task-description" rows="3"></textarea>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-task-deadline">Deadline (Optional)</label>
+              <input type="date" id="edit-task-deadline">
+            </div>
+            
+            <div class="form-group">
+              <label for="edit-task-time">Time Allocation (mins)</label>
+              <div class="input-icon">
+                <i class="fas fa-clock"></i>
+                <input type="number" id="edit-task-time" placeholder="30">
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="edit-task-priority">Priority</label>
+              <select id="edit-task-priority">
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="edit-task-status">Status</label>
+              <select id="edit-task-status">
+                <option value="not-started">Not Started</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="submit" class="btn primary-btn">Update Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <script src="script.js"></script>
   </body>
 </html>
